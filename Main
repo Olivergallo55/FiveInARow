@@ -1,0 +1,218 @@
+import java.util.*;
+
+public class Minimax {
+	
+	private Scanner scan = new Scanner(System.in);
+	
+	/*
+	 * Method to show the board as a starting phase
+	 * @param a double String array to display the 8x8 board 
+	 * */
+	private void printBoard(String[][] spelBord) {
+		int bordStorlek = spelBord.length;
+		System.out.println("Spelplanen: ");
+		System.out.print("      " + 1 );
+		for(int i = 2; i < 9; i++) {
+			System.out.print("   " +  i + "");
+		}
+		System.out.print('\n' + "    ---------------------------------" + '\n');
+		for(int rad = 0; rad < bordStorlek; rad++) {
+			System.out.print(rad + 1 + "   |");
+			for(int kolumn = 0; kolumn < bordStorlek; kolumn++) {
+				if(spelBord[rad][kolumn] == null) System.out.print("  " + " |");
+				else System.out.print(" " + spelBord[rad][kolumn] + " |");
+			}
+			System.out.print('\n' + "    ---------------------------------" + '\n');
+		}
+	}
+	
+	/*
+	 * Gets the player input with a scanner
+	 * @return the players input as an int
+	 */
+	private int getPlayerInput() {
+		System.out.println("Vill du börja spelet? ja(1), nej(0):");
+		int input = scan.nextInt();
+		return input;
+	}
+	
+	/*
+	 * Checks the input from the player
+	 */
+	private int[] readPlayerInput() {
+		int[] input = new int[2];
+		System.out.println("Vilken rad väljer du: ");
+		int rad = scan.nextInt() -1;
+		input[0] = rad;
+		System.out.println("Vilken kolumn väljer du: ");
+		int kolumn = scan.nextInt() -1;
+		input[1] = kolumn;
+		
+
+		return input;
+	}
+	
+	/*
+	 * Checks if the piece is outside of range or already occupied by a node
+	 * @return the given input
+	 */
+	private int[] checkPlayerInput(Node node) {
+		int[] check = readPlayerInput();
+		if(check[0] >= 8 || check[0] < 0 || check[1] >= 8 || check[1] < 0 ||
+				node.gameBoard[check[0]][check[1]] == "O" || node.gameBoard[check[0]][check[1]] == "X") { 
+			check = readPlayerInput();
+			System.out.println("Du kan inte välja den alternativet");
+		}
+		
+		return check;
+	}
+	
+	/*
+	 *TODO checking if the move is possible
+	 *TODO output the board
+	 *TODO put in the move --> spelBord[rad][kolumn] = val
+	 */
+	private void playerMove(Node node) {
+		
+		boolean check = false;
+		int[] player = readPlayerInput();
+		
+		do {
+		
+			node.gameBoard[player[0]][player[1]] = node.player;
+			printBoard(node.gameBoard);
+			if(checkWin(node) == true) {
+				System.out.println("Du vann mannen");
+				check = true; 
+				break;
+			} 
+			player = readPlayerInput();
+			
+			
+		}while(!check);
+	}
+	
+	private boolean checkWin(Node node) {
+		
+		return checkWinRow(node) == true || checkWinColumn(node) == true || checkWinDiagonal(node) == true ? true : false;
+	}
+	
+	
+	/*
+	 * Method Checks for win in the row, if it have 5 in a row it returns true
+	 * Contains checks, check for null or if the spot is already taken the counter wont update
+	 * @return if there is five in a row or not
+	 */
+	private boolean checkWinRow(Node node) {
+		
+	      int count = 0;
+	      boolean check = false;
+	      
+	      for(int row = 0; row < node.gameBoard.length; row++) {
+	    	  for(int col = 0; col < node.gameBoard[row].length; col++) {
+	    		  if(node.gameBoard[row][col] == node.player && count < 5) {
+	    			 
+	    			  		++count;
+	    			  		if(count >= 5)
+	    			  			 return check = true;
+	    			  		System.out.println(count + " count");
+	    			  
+	    		  }else {
+	    			  check = false;
+	    			  count = 0;
+	    		  }
+	    	  }
+	      }
+	    	 
+	        return false;
+	    }
+	
+
+	/*
+	 * Method Checks for win in the column, if it have 5 in a row it returns true
+	 * Contains checks, check for null or if the spot is already taken the counter wont update
+	 * @return if there is five in a column or not
+	 */
+	private boolean checkWinColumn(Node node) {
+
+	      int count = 0;
+	      boolean check = false;
+	      
+	      for(int row = 0; row < node.gameBoard.length; row++) {
+	    	  for(int col = 0; col < node.gameBoard[row].length; col++) {
+	    		  if(node.gameBoard[col][row] == node.player && count < 5) {
+	    			 
+	    			  		++count;
+	    			  		if(count >= 5)
+	    			  			return check = true;
+	    			  		System.out.println(count + " count");
+	    			  
+	    		  }else {
+	    			  check = false;
+	    			  count = 0;
+	    		  }
+	    	  }
+	      }
+	    	 
+	        return false;
+	}
+	
+	/*
+	 * TODO Check for left win and for right win? 
+	 */
+	private boolean checkWinDiagonal(Node node){
+		 int count = 0;
+	      boolean check = false;
+	       
+	      for(int row = 0; row < node.gameBoard.length; row++) {
+	    	  for(int col = row + 1; col < node.gameBoard[row].length; col++) {
+	    		  if(node.gameBoard[col][row] == node.player && count < 5) {
+	    			  if(node.gameBoard[col][row] == null||
+	    					node.gameBoard[col][row] != "O" || node.gameBoard[col][row] != "X"){
+	    			  		count++;
+	    			  		System.out.println(count + " count Dialog");
+	    			  } 
+	    		  }else if(count >= 5) {
+	    			  check = true;
+	    			  return check;
+	    		  }else {
+	    			  check = false;
+	    			  count = 0;
+	    		  }
+	    	  }
+	    	   
+	      }
+	    	 
+	        return false;
+	}
+	
+	/*
+	 * This method runs the game play such as the showing the board
+	 * Getting the inputs and controls the AI
+	 * TODO else machine move and "root.player = "X"
+	 */
+	private void run() {
+		Node node = new Node();
+		printBoard(node.gameBoard);
+		int player = getPlayerInput();
+		
+		if(player == 1) {
+			node.player = "O";
+			playerMove(node);
+		}else if(player == 2) {
+			System.out.println("Machines turn, not implemented yet please hol on!");
+			return;
+		}else {
+			System.out.println("this option not implemented yet, please choose answer one or two");
+			return;
+		}
+	}
+	
+	/*
+	 * Main method runs the game
+	 */
+	public static void main(String[] args) {
+		Minimax m = new Minimax();
+		m.run();
+	}
+}
