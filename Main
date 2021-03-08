@@ -82,7 +82,7 @@ public class Minimax {
 			node.gameBoard[player[0]][player[1]] = node.player;
 			printBoard(node.gameBoard);
 			if(checkWin(node) == true) {
-				System.out.println("Du vann mannen");
+				System.out.println("You win");
 				check = true; 
 				break;
 			} 
@@ -115,7 +115,7 @@ public class Minimax {
 	    			  		++count;
 	    			  		if(count >= 5)
 	    			  			 return check = true;
-	    			  		System.out.println(count + " count");
+	    			  	//	System.out.println(count + " count");
 	    			  
 	    		  }else {
 	    			  check = false;
@@ -141,11 +141,9 @@ public class Minimax {
 	      for(int row = 0; row < node.gameBoard.length; row++) {
 	    	  for(int col = 0; col < node.gameBoard[row].length; col++) {
 	    		  if(node.gameBoard[col][row] == node.player && count < 5) {
-	    			 
 	    			  		++count;
 	    			  		if(count >= 5)
 	    			  			return check = true;
-	    			  		System.out.println(count + " count");
 	    			  
 	    		  }else {
 	    			  check = false;
@@ -158,32 +156,93 @@ public class Minimax {
 	}
 	
 	/*
-	 * TODO Check for left win and for right win? 
+	 * First from right to left
+	 * Second is left to right
 	 */
 	private boolean checkWinDiagonal(Node node){
+		return getWinDiagonalLeft(node) || getWinDiagonalRight(node);
+    }
+	
+	
+	/*
+	 * Detects winner diagonally going from the left side to the right
+	 * First part of the method detects win the left half of the matrix
+	 * The second half of the method detects win the right half of the matrix
+	 * 
+	 * @param node gives access to the player and to the board   
+	 * @return true if there is 5 in a row for a player
+	 */
+	private boolean getWinDiagonalLeft(Node node) {
+		
+		int count = 0;
+	    for (int k = node.gameBoard.length - 1; k > -1; k--) {
+	    	count = 0;//reset the counter
+	        for (int row = 0, col = k; row < node.gameBoard.length && col < node.gameBoard.length; row++, col++) {
+	            if(node.gameBoard[row][col] == node.player && count < 5) {
+	                ++count;
+	                System.out.println(count + " left1");
+	                if(count >= 5)
+	                    return true;
+	            }else {
+	                count = 0;
+	            }
+	        }
+	    }
+	    count = 0;
+	    for (int k = 1; k < node.gameBoard.length; k++) {
+	    	count = 0;//reset the counter
+	        for (int row = k, col = 0; row <node.gameBoard.length && col < node.gameBoard[row].length; row++, col++) {
+	            if(node.gameBoard[col][row] == node.player && count < 5) {
+	                ++count;
+	                System.out.println(count + " left2");
+	                if(count >= 5)
+	                    return true;
+	            }else {
+	                count = 0;
+	            }
+	        }
+	    }
+	    return false;
+	}
+	
+	/*
+	 * Detects winner diagonally going from the right side to the left
+	 * First part of the method detects win the left half of the matrix
+	 * The second half of the method detects win the right half of the matrix
+	 * 
+	 * @param node gives access to the player and to the board   
+	 * @return true if there is 5 in a row for a player
+	 */
+	private boolean getWinDiagonalRight(Node node) {
 		 int count = 0;
-	      boolean check = false;
-	       
-	      for(int row = 0; row < node.gameBoard.length; row++) {
-	    	  for(int col = row + 1; col < node.gameBoard[row].length; col++) {
-	    		  if(node.gameBoard[col][row] == node.player && count < 5) {
-	    			  if(node.gameBoard[col][row] == null||
-	    					node.gameBoard[col][row] != "O" || node.gameBoard[col][row] != "X"){
-	    			  		count++;
-	    			  		System.out.println(count + " count Dialog");
-	    			  } 
-	    		  }else if(count >= 5) {
-	    			  check = true;
-	    			  return check;
-	    		  }else {
-	    			  check = false;
-	    			  count = 0;
-	    		  }
-	    	  }
-	    	   
-	      }
-	    	 
-	        return false;
+		    for (int k = 0; k < node.gameBoard.length; k++) {
+		    	count = 0;
+		        for (int row = k, col = 0; row >= 0 && col < node.gameBoard[row].length; row--, col++) {
+		            if(node.gameBoard[row][col] == node.player && count < 5) {
+		                ++count;
+		                System.out.println(count + " right1");
+		                if(count >= 5)
+		                    return true;
+		            }else {
+		                count = 0;
+		            }
+		        }
+		    }
+		    count = 0;
+		    for (int k = 1; k < node.gameBoard.length; k++) {
+		    	count = 0;
+		        for (int row = node.gameBoard.length - 1, col = k; row >= 0 && col < node.gameBoard[row].length; row--, col++) {
+		            if(node.gameBoard[col][row] == node.player && count < 5) {
+		                ++count;
+		                System.out.println(count + " right2");
+		                if(count >= 5)
+		                    return true;
+		            }else {
+		                count = 0;
+		            }
+		        }
+		    }
+		    return false;
 	}
 	
 	/*
