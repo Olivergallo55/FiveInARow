@@ -1,4 +1,4 @@
 # FiveInARow
 ALDA minmax algoritm
 
-Alda projektinlämning
+Alda projektinlämning med kommentarer
