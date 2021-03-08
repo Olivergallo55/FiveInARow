@@ -1,0 +1,22 @@
+
+
+public class Node {
+
+	String[][] gameBoard = new String[8][8];
+	String player;
+	int value;  
+	int depth;
+	
+	public Node(String[][] gameBoard,String player,int value, int depth) {
+		this.gameBoard = gameBoard;
+		this.player = player;
+		this.value = value;
+		this.depth = depth;
+	}
+	
+	//Default constructor
+	public Node(){}
+	
+	
+	
+}
