@@ -67,33 +67,7 @@ public class Minimax {
 		return check;
 	}
 	
-	/*
-	 *TODO checking if the move is possible
-	 *TODO output the board
-	 *TODO put in the move --> spelBord[rad][kolumn] = val
-	 */
-	private void playerMove(Node node) {
-		
-		boolean check = false;
-		int[] player = readPlayerInput();
-		
-		do {
-		
-			node.gameBoard[player[0]][player[1]] = node.player;
-			printBoard(node.gameBoard);
-			if(checkWin(node) == true) {
-				System.out.println("You win");
-				check = true; 
-				break;
-			} 
-			player = readPlayerInput();
-			
-			
-		}while(!check);
-	}
-	
 	private boolean checkWin(Node node) {
-		
 		return checkWinRow(node) == true || checkWinColumn(node) == true || checkWinDiagonal(node) == true ? true : false;
 	}
 	
@@ -245,6 +219,34 @@ public class Minimax {
 		    return false;
 	}
 	
+	private void AiMove(Node node) {
+		
+	}
+	
+	/*
+	 *TODO checking if the move is possible
+	 *TODO output the board
+	 */
+	private void playerMove(Node node) {
+		
+		boolean check = false;
+		int[] player = readPlayerInput();
+		
+		do {
+		
+			node.gameBoard[player[0]][player[1]] = node.player; //puts the players token at the right place
+			printBoard(node.gameBoard);
+			if(checkWin(node) == true) {
+				System.out.println("You win");
+				check = true; 
+				break;
+			} 
+			player = readPlayerInput();
+			
+			
+		}while(!check);
+	}
+	
 	/*
 	 * This method runs the game play such as the showing the board
 	 * Getting the inputs and controls the AI
@@ -258,11 +260,9 @@ public class Minimax {
 		if(player == 1) {
 			node.player = "O";
 			playerMove(node);
-		}else if(player == 2) {
-			System.out.println("Machines turn, not implemented yet please hol on!");
-			return;
 		}else {
-			System.out.println("this option not implemented yet, please choose answer one or two");
+			node.player = "X";
+			AiMove(node);
 			return;
 		}
 	}
